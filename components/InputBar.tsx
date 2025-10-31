@@ -4,64 +4,44 @@ import { PaperclipIcon, PaperPlaneIcon, CameraIcon } from './icons';
 import CameraCapture from './CameraCapture';
 
 interface InputBarProps {
-  onSendMessage: (text: string, image?: ImageFile) => void;
+  onSendMessage: (text: string) => void;
   isLoading: boolean;
+  imageFile: ImageFile | null;
+  imagePreview: string | null;
+  onFileSelect: (file: File) => void;
+  onImageRemove: () => void;
 }
 
-const fileToBase64 = (file: File): Promise<{ base64: string, mimeType: string }> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      const result = reader.result as string;
-      const base64 = result.split(',')[1];
-      resolve({ base64, mimeType: file.type });
-    };
-    reader.onerror = (error) => reject(error);
-  });
-};
-
-const InputBar: React.FC<InputBarProps> = ({ onSendMessage, isLoading }) => {
+const InputBar: React.FC<InputBarProps> = ({ 
+  onSendMessage, 
+  isLoading, 
+  imageFile, 
+  imagePreview,
+  onFileSelect,
+  onImageRemove 
+}) => {
   const [text, setText] = useState('');
-  const [imageFile, setImageFile] = useState<ImageFile | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const processFile = async (file: File) => {
-    if (file) {
-       try {
-        const { base64, mimeType } = await fileToBase64(file);
-        setImageFile({ base64, mimeType, name: file.name });
-        // Clean up previous image preview if it exists
-        if (imagePreview) {
-            URL.revokeObjectURL(imagePreview);
-        }
-        setImagePreview(URL.createObjectURL(file));
-      } catch (error) {
-        console.error("Error processing file:", error);
-      }
-    }
-  };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      processFile(file);
+      onFileSelect(file);
     }
   };
 
   const handleCapture = (file: File) => {
-    processFile(file);
+    onFileSelect(file);
     setIsCameraOpen(false);
   };
 
   const handleSend = () => {
     if (isLoading || (!text.trim() && !imageFile)) return;
     const prompt = text.trim() || (imageFile ? "What plant is this and how do I care for it?" : "");
-    onSendMessage(prompt, imageFile || undefined);
+    onSendMessage(prompt);
     setText('');
-    removeImage();
+    // Image is cleared in the parent component's handleSendMessage
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -72,11 +52,7 @@ const InputBar: React.FC<InputBarProps> = ({ onSendMessage, isLoading }) => {
   };
 
   const removeImage = () => {
-    setImageFile(null);
-    if (imagePreview) {
-        URL.revokeObjectURL(imagePreview);
-    }
-    setImagePreview(null);
+    onImageRemove();
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }

@@ -10,10 +10,12 @@ This document outlines the functional and non-functional requirements for **Flor
 
 ### 2.1. Plant Identification
 
--   **Requirement**: Users must be able to upload an image file from their device or capture a new photo using their device's camera.
+-   **Requirement**: Users must be able to provide an image of a plant through various methods.
 -   **Acceptance Criteria**:
     -   The application shall provide a distinct button (paperclip icon) to open the device's file gallery.
     -   The application shall provide a distinct button (camera icon) to open the device's camera directly.
+    -   The user shall be able to drag and drop an image file from their desktop anywhere onto the application window.
+    -   A visual overlay/dropzone will appear when a file is being dragged over the application to provide feedback.
     -   The application shall accept common image formats (e.g., JPEG, PNG, WEBP).
     -   The uploaded image will be sent to the Gemini API for analysis.
     -   If the user provides an image without a text prompt, a default prompt ("What plant is this and how do I care for it?") will be used.
@@ -39,6 +41,7 @@ This document outlines the functional and non-functional requirements for **Flor
 -   **Acceptance Criteria**:
     -   If an API call fails, a user-friendly error message will be displayed in the chat window.
     -   If an image cannot be identified, the AI will politely inform the user and suggest trying a different image.
+    -   If a user drops an invalid file type, an error message should inform them.
 
 ## 3. User Interface (UI) / User Experience (UX)
 
@@ -47,6 +50,7 @@ This document outlines the functional and non-functional requirements for **Flor
 -   **Header**: A fixed header containing the application name ("Flora") and icon.
 -   **Chat Window**: A scrollable view that displays the conversation history. It must auto-scroll to the latest message.
 -   **Input Bar**: A fixed footer containing the text input field and action buttons.
+-   **Drag-and-Drop Overlay**: A full-screen overlay that appears when dragging a file over the application, indicating a valid drop target.
 
 ### 3.2. Chat Components
 

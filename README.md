@@ -6,10 +6,10 @@ Flora is a modern, AI-powered web application designed to help gardening enthusi
 
 ## ✨ Features
 
--   **📸 Plant Identification**: Upload a photo or use your device's camera to snap a picture of a plant for instant identification.
+-   **📸 Multiple Image Inputs**: Upload a photo, use your device's camera, or simply drag and drop an image onto the app.
 -   **💬 Conversational Interface**: An intuitive chat window to interact with the AI assistant.
 -   **🌿 Detailed Care Instructions**: Receive specific advice on sunlight, watering, soil, and fertilizer for your plants.
--   **💡 Intuitive UI**: A clean interface with helpful tooltips and clear iconography.
+-   **💡 Intuitive UI**: A clean interface with helpful tooltips, clear iconography, and a visual drop zone for files.
 -   **🧠 General Gardening Knowledge**: Ask any gardening-related question and get a helpful response.
 -   **💨 Real-time Responses**: Get quick answers with a "Flora is typing..." indicator for a better user experience.
 -   **📱 Responsive Design**: A clean, mobile-first interface that works beautifully on any device.
