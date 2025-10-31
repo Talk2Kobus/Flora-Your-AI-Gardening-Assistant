@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ChatWindow from './components/ChatWindow';
 import InputBar from './components/InputBar';
-import { analyzeGardeningQuery } from './services/geminiService';
+import { createChat, translateText } from './services/geminiService';
 import type { Message, ImageFile } from './types';
+import type { Chat } from '@google/genai';
 import { LeafIcon } from './components/icons';
 
 const fileToBase64 = (file: File): Promise<{ base64: string, mimeType: string }> => {
@@ -27,7 +28,6 @@ const DropzoneOverlay: React.FC = () => (
   </div>
 );
 
-
 const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -43,6 +43,15 @@ const App: React.FC = () => {
   const [pendingImage, setPendingImage] = useState<ImageFile | null>(null);
   const [pendingImagePreview, setPendingImagePreview] = useState<string | null>(null);
   const appRef = useRef<HTMLDivElement>(null);
+  const chatRef = useRef<Chat | null>(null);
+
+  const [translatingMessageId, setTranslatingMessageId] = useState<string | null>(null);
+  const [translatedMessageIds, setTranslatedMessageIds] = useState<Set<string>>(new Set());
+
+  // Initialize chat on component mount
+  useEffect(() => {
+    chatRef.current = createChat();
+  }, []);
 
   const processFile = async (file: File) => {
       if (file && file.type.startsWith('image/')) {
@@ -101,6 +110,54 @@ const App: React.FC = () => {
       };
   }, []);
 
+  const handleToggleTranslation = async (messageId: string) => {
+    const message = messages.find(m => m.id === messageId);
+    if (!message) return;
+
+    // If it's currently showing translation, toggle back to original
+    if (translatedMessageIds.has(messageId)) {
+      const newSet = new Set(translatedMessageIds);
+      newSet.delete(messageId);
+      setTranslatedMessageIds(newSet);
+      return;
+    }
+
+    // If translation already exists, just toggle to show it
+    if (message.translation) {
+      const newSet = new Set(translatedMessageIds);
+      newSet.add(messageId);
+      setTranslatedMessageIds(newSet);
+      return;
+    }
+
+    // If translation doesn't exist, fetch it
+    setTranslatingMessageId(messageId);
+    try {
+      const translation = await translateText(message.text);
+      setMessages(prevMessages => 
+        prevMessages.map(m => 
+          m.id === messageId ? { ...m, translation } : m
+        )
+      );
+      const newSet = new Set(translatedMessageIds);
+      newSet.add(messageId);
+      setTranslatedMessageIds(newSet);
+    } catch (err) {
+      console.error("Translation error:", err);
+      const errorMessage = "Sorry, I couldn't translate that message right now.";
+      setError(errorMessage);
+       const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        sender: 'bot',
+        text: errorMessage,
+      };
+      setMessages(prev => [...prev, botMessage]);
+    } finally {
+      setTranslatingMessageId(null);
+    }
+  };
+
+
   const handleSendMessage = async (text: string) => {
     setIsLoading(true);
     setError(null);
@@ -117,8 +174,33 @@ const App: React.FC = () => {
     const imageToSend = pendingImage;
     removePendingImage();
 
+    // If a new image is being sent, reset the chat to start a new conversation context
+    if (imageToSend) {
+      chatRef.current = createChat();
+    }
+
+    if (!chatRef.current) {
+      setError("Chat service is not initialized. Please refresh the page.");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const botResponseText = await analyzeGardeningQuery(text, imageToSend ?? undefined);
+      const contentParts = [];
+      if (imageToSend) {
+        contentParts.push({
+          inlineData: {
+            mimeType: imageToSend.mimeType,
+            data: imageToSend.base64,
+          },
+        });
+      }
+      contentParts.push({ text });
+
+      // FIX: The `sendMessage` method expects a `message` property containing the content parts, not a `parts` property.
+      const response = await chatRef.current.sendMessage({ message: contentParts });
+      const botResponseText = response.text;
+
       const botMessage: Message = {
         id: (Date.now() + 1).toString(),
         sender: 'bot',
@@ -141,16 +223,24 @@ const App: React.FC = () => {
   };
 
   return (
-    <div ref={appRef} className="h-screen w-screen flex flex-col font-sans bg-green-50/50 relative">
+    <div ref={appRef} className="h-screen w-screen flex flex-col font-sans bg-green-50/50 relative transition-colors duration-300">
       {isDragging && <DropzoneOverlay />}
       <header className="bg-white/80 backdrop-blur-sm border-b border-green-200/50 p-4 shadow-sm">
-        <div className="max-w-4xl mx-auto flex items-center gap-3">
-            <LeafIcon className="h-8 w-8 text-green-600" />
-            <h1 className="text-2xl font-bold text-green-800 tracking-tight">Flora</h1>
-            <span className="text-sm text-gray-500 mt-1">AI Gardening Assistant</span>
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-3">
+                <LeafIcon className="h-8 w-8 text-green-600" />
+                <h1 className="text-2xl font-bold text-green-800 tracking-tight">Flora</h1>
+                <span className="text-sm text-gray-500 mt-1">AI Gardening Assistant</span>
+            </div>
         </div>
       </header>
-      <ChatWindow messages={messages} isLoading={isLoading} />
+      <ChatWindow 
+        messages={messages} 
+        isLoading={isLoading} 
+        onToggleTranslation={handleToggleTranslation}
+        translatedMessageIds={translatedMessageIds}
+        translatingMessageId={translatingMessageId}
+      />
       <InputBar 
         onSendMessage={handleSendMessage} 
         isLoading={isLoading}

@@ -116,7 +116,7 @@ const InputBar: React.FC<InputBarProps> = ({
             <button
               onClick={handleSend}
               disabled={isLoading || (!text.trim() && !imageFile)}
-              className="absolute right-3 bg-green-500 text-white rounded-lg p-2 hover:bg-green-600 transition-colors disabled:bg-green-300 disabled:cursor-not-allowed"
+              className="absolute right-3 bg-green-600 text-white rounded-lg p-2 hover:bg-green-700 transition-colors disabled:bg-green-300 disabled:cursor-not-allowed"
               aria-label="Send message"
               title="Send message"
             >

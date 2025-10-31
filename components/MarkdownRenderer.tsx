@@ -57,7 +57,7 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content }) => {
     return elements;
   };
 
-  return <div className="prose prose-sm max-w-none text-gray-700">{renderContent()}</div>;
+  return <div className="prose prose-sm max-w-none">{renderContent()}</div>;
 };
 
 export default MarkdownRenderer;

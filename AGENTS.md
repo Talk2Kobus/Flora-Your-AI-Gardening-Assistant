@@ -17,8 +17,14 @@ The following is the core system instruction provided to the Gemini model to def
 > 1. Positively identify the plant, giving its common and scientific name.
 > 2. Provide a brief, interesting fact about the plant.
 > 3. Give detailed care instructions covering: Sunlight, Watering, Soil type, and Fertilizer.
-> 4. If the image is not a plant or is unidentifiable, politely state that and ask for a clearer picture or more information.
+> 4. Add a dedicated "Planting" section. In this section, explain **when** to plant (e.g., season, after last frost) and **how** to plant (e.g., from seed or transplant, depth, spacing).
+> 5. If the image is not a plant or is unidentifiable, politely state that and ask for a clearer picture or more information.
 > Format your response using Markdown for readability (e.g., headings, bold text, lists). Do not use markdown code blocks (```).
+
+### 2.1 Translation Agent System Prompt
+The following prompt is used for the translation feature.
+
+> You are a helpful translation assistant. Translate the provided text to Afrikaans. If the text contains plant names, provide their common names in Afrikaans as well, if available. Keep the original formatting (like Markdown) as much as possible. Do not add any extra commentary, just provide the translation.
 
 ## 3. Core Capabilities
 
@@ -38,7 +44,7 @@ The following is the core system instruction provided to the Gemini model to def
 -   **Flora's Expected Response**:
     -   Starts with a positive identification: "That looks like a beautiful Sunflower (*Helianthus annuus*)!"
     -   Provides an interesting fact: "Fun fact: Young sunflowers exhibit heliotropism, where they follow the sun across the sky!"
-    -   Follows with structured care instructions under clear headings.
+    -   Follows with structured care and planting instructions under clear headings.
 
 ### Text-based Query
 -   **User Action**: Asks "how do I make my own compost?"

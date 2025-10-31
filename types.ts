@@ -3,6 +3,7 @@ export interface Message {
   sender: 'user' | 'bot';
   text: string;
   image?: string; // base64 data URI for display
+  translation?: string; // To store the translated text
 }
 
 export interface ImageFile {

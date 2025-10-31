@@ -26,6 +26,7 @@ This document outlines the functional and non-functional requirements for **Flor
 -   **Acceptance Criteria**:
     -   The AI's response should include the plant's common and scientific names.
     -   Care instructions must cover at least: **Sunlight**, **Watering**, **Soil type**, and **Fertilizer**.
+    -   The response must include a dedicated **Planting** section, explaining when and how to plant (e.g., season, from seed/transplant, depth, spacing).
     -   The response should be formatted using Markdown for readability (headings, bold text, lists).
 
 ### 2.3. General Gardening Q&A
@@ -43,6 +44,17 @@ This document outlines the functional and non-functional requirements for **Flor
     -   If an image cannot be identified, the AI will politely inform the user and suggest trying a different image.
     -   If a user drops an invalid file type, an error message should inform them.
 
+### 2.5. Text Translation
+
+-   **Requirement**: Users must be able to translate bot-generated messages into a target language (Afrikaans).
+-   **Acceptance Criteria**:
+    -   A "Translate to Afrikaans" button will appear below each message from Flora.
+    -   Clicking the button sends the message text to the Gemini API for translation.
+    -   The original message text is replaced with the translated text in the UI.
+    -   The button text changes to "Show Original".
+    -   Clicking "Show Original" reverts the text back to English.
+    -   A loading state ("Translating...") is displayed on the button while the API call is in progress.
+
 ## 3. User Interface (UI) / User Experience (UX)
 
 ### 3.1. Main Layout
@@ -58,6 +70,7 @@ This document outlines the functional and non-functional requirements for **Flor
 -   **Bot Messages**: Displayed on the left side, accompanied by the "Flora" icon, with a different background color (e.g., white).
 -   **Image Previews**: User-uploaded images will be shown within their message bubble.
 -   **Typing Indicator**: When waiting for an AI response, a typing animation will be displayed to inform the user that the system is processing.
+-   **Translate Button**: An interactive button below bot messages allows for on-demand translation to Afrikaans.
 
 ### 3.3. Input Controls
 
