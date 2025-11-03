@@ -7,27 +7,24 @@ Flora Navigator is an AI-powered web application designed for gardening enthusia
 ## 2. Core Features
 
 ### 2.1. Application Flow
-The application is designed with a clear, two-stage flow to enhance user experience on mobile devices.
+The application is designed with a clear, two-stage flow to enhance user experience.
 
 #### 2.1.1. Landing Page
--   **Purpose**: The initial screen that provides a clear entry point into the app's core functionalities.
+-   **Purpose**: The initial screen that provides a clear, visually engaging entry point into the app's core functionalities.
 -   **Components**:
-    -   Application logo and name ("Flora").
-    -   A welcoming tagline.
-    -   Three distinct, clickable options:
-        1.  **Identify Plant**: For identifying a plant from an image.
-        2.  **Diagnose Problem**: For diagnosing plant diseases or pests.
-        3.  **Care Instructions**: For getting plant care advice.
+    -   Application logo and a "Hello, Gardener!" greeting.
+    -   A large, interactive "hero" card for "Identify Plant" featuring a background image.
+    -   Two smaller, distinctively colored cards for "Diagnose Problem" and "Care Guide".
 -   **Behavior**:
-    -   Clicking an option transitions the user to the Chat View, pre-set to the corresponding mode.
-    -   For "Identify" and "Diagnose", the application will automatically prompt the user to upload an image.
+    -   Tapping any of the three cards transitions the user to the Chat View, pre-set to the corresponding mode (`identify`, `diagnose`, or `care`).
+    -   The user is not automatically prompted to upload a file, allowing them to start the conversation by typing if they prefer.
 
 #### 2.1.2. Chat View
 -   **Purpose**: The main interactive screen where the user communicates with the AI.
 -   **Layout**:
-    -   **Header**: Displays the application logo and the current mode's title (e.g., "Identify", "Diagnose"). Includes a theme (light/dark) toggle.
-    -   **Chat Window**: A scrollable view that displays the conversation history between the user and the AI.
-    -   **Input Bar**: A text area for user input, with buttons for attaching files, using the camera, and sending the message. The placeholder text is dynamic, reflecting the current mode.
+    -   **Header**: Displays the application logo and the current mode's title (e.g., "Identify"). The title color dynamically changes based on the mode. Includes a theme (light/dark) toggle.
+    -   **Chat Window**: A scrollable view of the conversation. User message bubbles are color-coded to match the current mode's theme.
+    -   **Input Bar**: A text area for user input, with buttons for attaching files, using the camera, and sending the message. The placeholder text, focus ring, and send button colors are themed according to the current mode.
     -   **Navigation Bar**: A fixed bar at the bottom of the screen for easy navigation.
 
 ### 2.2. Navigation Bar
@@ -38,7 +35,7 @@ The application is designed with a clear, two-stage flow to enhance user experie
     -   **Diagnose**: Switches to the problem diagnosis mode.
     -   **Care**: Switches to the care instructions mode.
 -   **Behavior**:
-    -   The icon for the currently active mode is highlighted.
+    -   The icon for the currently active mode is highlighted with a background color that matches the mode's theme.
     -   Switching modes clears the current chat history to provide a clean context for the new conversation.
 
 ### 2.3. AI Modes & Personas
@@ -65,5 +62,6 @@ The AI, "Flora," adopts a different persona based on the selected mode to provid
 
 ## 4. Accessibility & Design
 -   **Responsive Design**: The interface is optimized for mobile devices but is functional on desktops.
+-   **Dynamic Theming**: The app uses a dynamic color system. The UI for each mode (`identify`, `diagnose`, `care`) has a unique color palette (blue, teal, green respectively) applied to headers, buttons, and chat bubbles for strong visual cohesion.
 -   **Dark Mode**: A theme toggle allows users to switch between light and dark modes for user comfort.
 -   **ARIA Attributes**: Buttons and inputs include appropriate ARIA labels for screen reader compatibility.

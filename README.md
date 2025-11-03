@@ -1,19 +1,21 @@
 # Flora Navigator: Your AI Gardening Guide
 
-Flora Navigator is a modern, AI-powered web application designed to help gardening enthusiasts of all levels. By leveraging the power of Google's Gemini API, Flora Navigator can identify plants from a photograph, provide detailed care instructions, and answer general gardening questions through a user-friendly chat interface.
+Flora Navigator is a modern, AI-powered web application designed to help gardening enthusiasts of all levels. By leveraging the power of Google's Gemini API, Flora Navigator can identify plants from a photograph, diagnose problems, and provide detailed care instructions through a user-friendly, conversational interface.
 
 ![Flora Navigator Screenshot](https://storage.googleapis.com/aistudio-o-images/project_screenshots/flora-navigator.png)
 
 ## ✨ Features
 
--   **📸 Multiple Image Inputs**: Upload a photo, use your device's camera, or simply drag and drop an image onto the app.
--   **💬 Conversational Interface**: An intuitive chat window to interact with the AI assistant.
--   **🌿 Detailed Care & Planting Instructions**: Receive specific advice on sunlight, watering, soil, fertilizer, and detailed instructions on when and how to plant.
--   **🌍 One-Click Translation**: Translate Flora's advice to Afrikaans with a single click.
--   **💡 Intuitive UI**: A clean interface with helpful tooltips, clear iconography, and a visual drop zone for files.
--   **🧠 General Gardening Knowledge**: Ask any gardening-related question and get a helpful response.
--   **💨 Real-time Responses**: Get quick answers with a "Flora is typing..." indicator for a better user experience.
--   **📱 Responsive Design**: A clean, mobile-first interface that works beautifully on any device.
+-   **🎯 Three Specialized Modes**:
+    -   **Identify**: Snap a photo to learn about any plant.
+    -   **Diagnose**: Upload an image of a sick plant to get a diagnosis and treatment plan.
+    -   **Care**: Ask for detailed care instructions for your plants.
+-   **📷 Flexible Image Input**: Upload photos from your device or use the built-in camera for real-time identification.
+-   **💬 Interactive Chat**: Engage in a natural conversation with Flora, your AI gardening assistant.
+-   **🎨 Dynamic Theming**: The app's color scheme (headers, chat bubbles, UI accents) changes to match the active mode, creating a beautiful and intuitive experience.
+-   **🌙 Light & Dark Modes**: Switch between light and dark themes for comfortable viewing in any environment.
+-   **📱 Responsive Design**: A clean, mobile-first interface that looks great on any screen size.
+-   **✨ Rich Responses**: AI responses are formatted with Markdown for easy readability, including headers, lists, and bold text.
 
 ## 🛠️ Tech Stack
 
@@ -66,11 +68,15 @@ To run this project locally, follow these steps:
 │   ├── CameraCapture.tsx      # Modal component for taking photos
 │   ├── ChatWindow.tsx         # Displays the chat message history
 │   ├── InputBar.tsx           # The text and file input area
+│   ├── LandingPage.tsx        # The initial screen for mode selection
 │   ├── MarkdownRenderer.tsx   # Renders Markdown from the AI's response
-│   └── icons.tsx              # SVG icon components
+│   ├── NavigationBar.tsx      # Bottom navigation for switching modes
+│   ├── assets.ts              # Base64 encoded image assets
+│   ├── icons.tsx              # SVG icon components
+│   └── logo.ts                # Base64 encoded app logo
 ├── services/                  # Handles external API calls
 │   └── geminiService.ts       # Logic for interacting with the Gemini API
-├── App.tsx                    # Main application component
+├── App.tsx                    # Main application component, manages state and views
 ├── index.html                 # The main HTML file
 ├── index.tsx                  # The entry point for the React app
 ├── metadata.json              # Application metadata
