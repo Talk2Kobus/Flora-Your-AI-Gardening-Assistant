@@ -1,10 +1,10 @@
-# Flora AI Gardening Assistant: Application Specification
+# Flora Navigator: Application Specification
 
 ### Version 1.0
 
 ## 1. Introduction
 
-This document outlines the functional and non-functional requirements for **Flora**, an AI-powered gardening assistant. The application's primary purpose is to provide users with an interactive and helpful tool for plant identification and care.
+This document outlines the functional and non-functional requirements for **Flora Navigator**, an AI-powered gardening guide. The application's primary purpose is to provide users with an interactive and helpful tool for plant identification and care.
 
 ## 2. Core Functionality
 
@@ -59,7 +59,7 @@ This document outlines the functional and non-functional requirements for **Flor
 
 ### 3.1. Main Layout
 
--   **Header**: A fixed header containing the application name ("Flora") and icon.
+-   **Header**: A fixed header containing the application logo.
 -   **Chat Window**: A scrollable view that displays the conversation history. It must auto-scroll to the latest message.
 -   **Input Bar**: A fixed footer containing the text input field and action buttons.
 -   **Drag-and-Drop Overlay**: A full-screen overlay that appears when dragging a file over the application, indicating a valid drop target.
@@ -67,7 +67,7 @@ This document outlines the functional and non-functional requirements for **Flor
 ### 3.2. Chat Components
 
 -   **User Messages**: Displayed on the right side with a distinct background color (e.g., light green).
--   **Bot Messages**: Displayed on the left side, accompanied by the "Flora" icon, with a different background color (e.g., white).
+-   **Bot Messages**: Displayed on the left side, accompanied by the "Flora" logo, with a different background color (e.g., white).
 -   **Image Previews**: User-uploaded images will be shown within their message bubble.
 -   **Typing Indicator**: When waiting for an AI response, a typing animation will be displayed to inform the user that the system is processing.
 -   **Translate Button**: An interactive button below bot messages allows for on-demand translation to Afrikaans.

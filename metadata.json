@@ -1,6 +1,6 @@
 {
-  "name": "Flora: Your AI Gardening Assistant",
-  "description": "An AI-powered gardening assistant that identifies plants from your camera or photos, provides detailed care instructions, and offers one-click translation through an interactive chat interface.",
+  "name": "Flora Navigator: Your AI Gardening Guide",
+  "description": "An AI-powered gardening guide that helps you navigate the world of plants. Identify plants from your camera or photos, get detailed care instructions, and ask any gardening question through an interactive chat interface.",
   "requestFramePermissions": [
     "camera"
   ]

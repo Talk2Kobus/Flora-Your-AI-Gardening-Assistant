@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import type { Message } from '../types';
 import MarkdownRenderer from './MarkdownRenderer';
-import { LeafIcon, TranslateIcon } from './icons';
+import { TranslateIcon } from './icons';
+import { floraLogoDataUri } from './logo';
 
 interface ChatWindowProps {
   messages: Message[];
@@ -27,8 +28,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isTranslated, isTran
     <div className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}>
       <div className={`flex items-start gap-3 ${isUser ? 'justify-end' : ''}`}>
         {!isUser && (
-          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white">
-            <LeafIcon className="w-5 h-5" />
+          <div className="flex-shrink-0 w-8 h-8 rounded-md overflow-hidden bg-white flex items-center justify-center shadow-sm">
+            <img src={floraLogoDataUri} alt="Flora avatar" className="h-full" />
           </div>
         )}
         <div className={`max-w-md md:max-w-lg rounded-xl px-4 py-3 shadow-sm ${isUser ? 'bg-green-100 text-gray-800' : 'bg-white text-gray-700'}`}>
@@ -64,8 +65,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({ message, isTranslated, isTran
 
 const TypingIndicator: React.FC = () => (
   <div className="flex items-start gap-3">
-    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center text-white">
-      <LeafIcon className="w-5 h-5" />
+    <div className="flex-shrink-0 w-8 h-8 rounded-md overflow-hidden bg-white flex items-center justify-center shadow-sm">
+      <img src={floraLogoDataUri} alt="Flora avatar" className="h-full" />
     </div>
     <div className="max-w-md md:max-w-lg rounded-xl px-4 py-3 bg-white shadow-sm flex items-center space-x-1">
         <span className="text-gray-500">Flora is typing</span>

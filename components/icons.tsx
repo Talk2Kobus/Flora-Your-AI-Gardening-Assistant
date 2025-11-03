@@ -13,15 +13,6 @@ export const PaperPlaneIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) =
   </svg>
 );
 
-export const LeafIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
-    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M11 20A7 7 0 0 1 4 13V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v6a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v6a7 7 0 0 1-7 7z" />
-        <path d="M12 20v-2" />
-        <path d="M12 6V4" />
-        <path d="M12 14v-2" />
-    </svg>
-);
-
 export const CameraIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
   <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />

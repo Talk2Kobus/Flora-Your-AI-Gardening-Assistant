@@ -4,7 +4,7 @@ import InputBar from './components/InputBar';
 import { createChat, translateText } from './services/geminiService';
 import type { Message, ImageFile } from './types';
 import type { Chat } from '@google/genai';
-import { LeafIcon } from './components/icons';
+import { floraLogoDataUri } from './components/logo';
 
 const fileToBase64 = (file: File): Promise<{ base64: string, mimeType: string }> => {
   return new Promise((resolve, reject) => {
@@ -22,7 +22,7 @@ const fileToBase64 = (file: File): Promise<{ base64: string, mimeType: string }>
 const DropzoneOverlay: React.FC = () => (
   <div className="absolute inset-0 bg-green-500/20 border-4 border-dashed border-green-600 rounded-lg z-50 flex items-center justify-center pointer-events-none m-4">
       <div className="text-center text-green-800 font-bold text-2xl bg-white/80 p-6 rounded-lg shadow-lg">
-          <LeafIcon className="h-12 w-12 mx-auto mb-2" />
+          <img src={floraLogoDataUri} alt="Flora Navigator Logo" className="h-24 mx-auto mb-4" />
           <p>Drop your plant photo here!</p>
       </div>
   </div>
@@ -33,7 +33,7 @@ const App: React.FC = () => {
     {
       id: 'initial',
       sender: 'bot',
-      text: "Hello! I'm Flora, your AI gardening assistant. Upload a photo of a plant to identify it, or ask me any gardening question!",
+      text: "Hello! I'm Flora, your AI gardening guide. Upload a photo of a plant to identify it, or ask me any gardening question!",
     }
   ]);
   const [isLoading, setIsLoading] = useState(false);
@@ -227,10 +227,9 @@ const App: React.FC = () => {
       {isDragging && <DropzoneOverlay />}
       <header className="bg-white/80 backdrop-blur-sm border-b border-green-200/50 p-4 shadow-sm">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-            <div className="flex items-center gap-3">
-                <LeafIcon className="h-8 w-8 text-green-600" />
-                <h1 className="text-2xl font-bold text-green-800 tracking-tight">Flora</h1>
-                <span className="text-sm text-gray-500 mt-1">AI Gardening Assistant</span>
+            <div className="flex items-center gap-4">
+                <img src={floraLogoDataUri} alt="Flora Navigator Logo" className="h-10" />
+                <span className="text-sm text-gray-500 self-end pb-1">Your AI Gardening Guide</span>
             </div>
         </div>
       </header>

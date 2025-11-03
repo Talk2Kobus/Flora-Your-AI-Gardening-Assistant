@@ -1,8 +1,8 @@
-# Flora: Your AI Gardening Assistant
+# Flora Navigator: Your AI Gardening Guide
 
-Flora is a modern, AI-powered web application designed to help gardening enthusiasts of all levels. By leveraging the power of Google's Gemini API, Flora can identify plants from a photograph, provide detailed care instructions, and answer general gardening questions through a user-friendly chat interface.
+Flora Navigator is a modern, AI-powered web application designed to help gardening enthusiasts of all levels. By leveraging the power of Google's Gemini API, Flora Navigator can identify plants from a photograph, provide detailed care instructions, and answer general gardening questions through a user-friendly chat interface.
 
-![Flora Screenshot](https://storage.googleapis.com/aistudio-o-images/project_screenshots/flora-gardening-assistant.png)
+![Flora Navigator Screenshot](https://storage.googleapis.com/aistudio-o-images/project_screenshots/flora-navigator.png)
 
 ## ✨ Features
 
@@ -34,8 +34,8 @@ To run this project locally, follow these steps:
 
 1.  **Clone the repository (or download the files):**
     ```bash
-    git clone https://github.com/your-username/flora-assistant.git
-    cd flora-assistant
+    git clone https://github.com/your-username/flora-navigator.git
+    cd flora-navigator
     ```
 
 2.  **Set up your API Key:**
