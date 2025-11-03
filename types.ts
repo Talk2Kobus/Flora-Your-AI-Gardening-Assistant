@@ -1,13 +1,17 @@
+// Defines the structure for a chat message.
 export interface Message {
   id: string;
-  sender: 'user' | 'bot';
   text: string;
+  sender: 'user' | 'bot';
+  timestamp: Date;
   image?: string; // base64 data URI for display
-  translation?: string; // To store the translated text
 }
 
+// Defines the structure for an image file being uploaded.
 export interface ImageFile {
-  base64: string; // raw base64 string for API
-  mimeType: string;
-  name: string;
+  file: File;
+  preview: string; // object URL for preview
 }
+
+// Defines the application modes for different tasks.
+export type AppMode = 'identify' | 'diagnose' | 'care';

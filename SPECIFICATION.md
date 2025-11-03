@@ -1,97 +1,69 @@
 # Flora Navigator: Application Specification
 
-### Version 1.0
+## 1. Overview
 
-## 1. Introduction
+Flora Navigator is an AI-powered web application designed for gardening enthusiasts. It provides a mobile-first, conversational interface to help users identify plants, diagnose plant health problems, and get detailed care instructions. The application leverages Google's Gemini API for its powerful multimodal AI capabilities.
 
-This document outlines the functional and non-functional requirements for **Flora Navigator**, an AI-powered gardening guide. The application's primary purpose is to provide users with an interactive and helpful tool for plant identification and care.
+## 2. Core Features
 
-## 2. Core Functionality
+### 2.1. Application Flow
+The application is designed with a clear, two-stage flow to enhance user experience on mobile devices.
 
-### 2.1. Plant Identification
+#### 2.1.1. Landing Page
+-   **Purpose**: The initial screen that provides a clear entry point into the app's core functionalities.
+-   **Components**:
+    -   Application logo and name ("Flora").
+    -   A welcoming tagline.
+    -   Three distinct, clickable options:
+        1.  **Identify Plant**: For identifying a plant from an image.
+        2.  **Diagnose Problem**: For diagnosing plant diseases or pests.
+        3.  **Care Instructions**: For getting plant care advice.
+-   **Behavior**:
+    -   Clicking an option transitions the user to the Chat View, pre-set to the corresponding mode.
+    -   For "Identify" and "Diagnose", the application will automatically prompt the user to upload an image.
 
--   **Requirement**: Users must be able to provide an image of a plant through various methods.
--   **Acceptance Criteria**:
-    -   The application shall provide a distinct button (paperclip icon) to open the device's file gallery.
-    -   The application shall provide a distinct button (camera icon) to open the device's camera directly.
-    -   The user shall be able to drag and drop an image file from their desktop anywhere onto the application window.
-    -   A visual overlay/dropzone will appear when a file is being dragged over the application to provide feedback.
-    -   The application shall accept common image formats (e.g., JPEG, PNG, WEBP).
-    -   The uploaded image will be sent to the Gemini API for analysis.
-    -   If the user provides an image without a text prompt, a default prompt ("What plant is this and how do I care for it?") will be used.
+#### 2.1.2. Chat View
+-   **Purpose**: The main interactive screen where the user communicates with the AI.
+-   **Layout**:
+    -   **Header**: Displays the application logo and the current mode's title (e.g., "Identify", "Diagnose"). Includes a theme (light/dark) toggle.
+    -   **Chat Window**: A scrollable view that displays the conversation history between the user and the AI.
+    -   **Input Bar**: A text area for user input, with buttons for attaching files, using the camera, and sending the message. The placeholder text is dynamic, reflecting the current mode.
+    -   **Navigation Bar**: A fixed bar at the bottom of the screen for easy navigation.
 
-### 2.2. Plant Care Instructions
+### 2.2. Navigation Bar
+-   **Purpose**: Allows for quick switching between different modes and returning to the landing page.
+-   **Buttons**:
+    -   **Home**: Returns the user to the Landing Page.
+    -   **Identify**: Switches to the plant identification mode.
+    -   **Diagnose**: Switches to the problem diagnosis mode.
+    -   **Care**: Switches to the care instructions mode.
+-   **Behavior**:
+    -   The icon for the currently active mode is highlighted.
+    -   Switching modes clears the current chat history to provide a clean context for the new conversation.
 
--   **Requirement**: Upon successful plant identification, the AI must provide detailed care instructions.
--   **Acceptance Criteria**:
-    -   The AI's response should include the plant's common and scientific names.
-    -   Care instructions must cover at least: **Sunlight**, **Watering**, **Soil type**, and **Fertilizer**.
-    -   The response must include a dedicated **Planting** section, explaining when and how to plant (e.g., season, from seed/transplant, depth, spacing).
-    -   The response should be formatted using Markdown for readability (headings, bold text, lists).
+### 2.3. AI Modes & Personas
+The AI, "Flora," adopts a different persona based on the selected mode to provide specialized responses. See `AGENTS.md` for detailed system instructions.
 
-### 2.3. General Gardening Q&A
+-   **Identify Mode**: Flora acts as a plant identification expert.
+-   **Diagnose Mode**: Flora acts as a plant pathologist.
+-   **Care Mode**: Flora acts as a master gardener.
 
--   **Requirement**: Users must be able to ask text-only questions related to gardening.
--   **Acceptance Criteria**:
-    -   The AI should provide relevant and helpful answers to general gardening queries.
-    -   The AI should maintain its persona as a friendly gardening assistant.
+### 2.4. User Inputs
+-   **Text**: Users can type questions or descriptions in the input bar.
+-   **Image**: Users can upload an image file or take a new photo with their device's camera.
 
-### 2.4. Error Handling
+### 2.5. AI Responses
+-   **Text**: Responses are formatted using Markdown for better readability (headings, lists, bold text).
+-   **Real-time Feedback**: A "typing" indicator is shown while the AI is processing a response.
 
--   **Requirement**: The application must gracefully handle errors during API calls or image processing.
--   **Acceptance Criteria**:
-    -   If an API call fails, a user-friendly error message will be displayed in the chat window.
-    -   If an image cannot be identified, the AI will politely inform the user and suggest trying a different image.
-    -   If a user drops an invalid file type, an error message should inform them.
+## 3. Technical Details
 
-### 2.5. Text Translation
+-   **Frontend Framework**: React with TypeScript.
+-   **Styling**: Tailwind CSS for a responsive, utility-first design.
+-   **AI Model**: Google Gemini (`gemini-2.5-flash`) for its multimodal chat capabilities.
+-   **Permissions**: The app requests camera permissions when the user chooses to take a photo.
 
--   **Requirement**: Users must be able to translate bot-generated messages into a target language (Afrikaans).
--   **Acceptance Criteria**:
-    -   A "Translate to Afrikaans" button will appear below each message from Flora.
-    -   Clicking the button sends the message text to the Gemini API for translation.
-    -   The original message text is replaced with the translated text in the UI.
-    -   The button text changes to "Show Original".
-    -   Clicking "Show Original" reverts the text back to English.
-    -   A loading state ("Translating...") is displayed on the button while the API call is in progress.
-
-## 3. User Interface (UI) / User Experience (UX)
-
-### 3.1. Main Layout
-
--   **Header**: A fixed header containing the application logo.
--   **Chat Window**: A scrollable view that displays the conversation history. It must auto-scroll to the latest message.
--   **Input Bar**: A fixed footer containing the text input field and action buttons.
--   **Drag-and-Drop Overlay**: A full-screen overlay that appears when dragging a file over the application, indicating a valid drop target.
-
-### 3.2. Chat Components
-
--   **User Messages**: Displayed on the right side with a distinct background color (e.g., light green).
--   **Bot Messages**: Displayed on the left side, accompanied by the "Flora" logo, with a different background color (e.g., white).
--   **Image Previews**: User-uploaded images will be shown within their message bubble.
--   **Typing Indicator**: When waiting for an AI response, a typing animation will be displayed to inform the user that the system is processing.
--   **Translate Button**: An interactive button below bot messages allows for on-demand translation to Afrikaans.
-
-### 3.3. Input Controls
-
--   **Text Area**: A multi-line text input that expands automatically. Pressing "Enter" sends the message, while "Shift+Enter" creates a new line.
--   **Attach Button**: A paperclip icon that opens the device's file selector.
--   **Camera Button**: A camera icon that opens the device's camera for direct capture.
--   **Send Button**: A paper plane icon that sends the message. It is disabled when no input is present or while a response is loading.
--   **Image Preview**: A small thumbnail of the selected image appears above the input bar with an "x" button to remove it before sending.
--   **Tooltips**: All icon buttons must display a descriptive tooltip on hover to clarify their function (e.g., "Attach image from gallery", "Send message").
-
-## 4. Technical Requirements
-
--   **Frontend Framework**: React 18+ with TypeScript.
--   **AI Service**: Google Gemini API.
--   **Model**: `gemini-2.5-flash` for its multimodal capabilities and fast responses.
--   **API Communication**: Asynchronous `fetch` calls are made from a dedicated service module (`geminiService.ts`).
--   **Styling**: Tailwind CSS for utility-first styling.
-
-## 5. Non-Functional Requirements
-
--   **Performance**: The application must feel responsive. API calls should not block the UI. The initial load time should be minimal.
--   **Responsiveness**: The UI must adapt cleanly to various screen sizes, from mobile phones to desktop monitors.
--   **Accessibility**: Interactive elements must have appropriate ARIA labels (e.g., "Attach image from gallery," "Use camera to take a photo"). Semantic HTML should be used where possible.
--   **Offline Functionality**: The application does not require offline functionality. An active internet connection is necessary to communicate with the Gemini API.
+## 4. Accessibility & Design
+-   **Responsive Design**: The interface is optimized for mobile devices but is functional on desktops.
+-   **Dark Mode**: A theme toggle allows users to switch between light and dark modes for user comfort.
+-   **ARIA Attributes**: Buttons and inputs include appropriate ARIA labels for screen reader compatibility.

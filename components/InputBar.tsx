@@ -1,132 +1,131 @@
-import React, { useState, useRef } from 'react';
-import type { ImageFile } from '../types';
-import { PaperclipIcon, PaperPlaneIcon, CameraIcon } from './icons';
+import React, { useState, useRef, useImperativeHandle, forwardRef } from 'react';
+import { PaperPlaneIcon, PaperclipIcon, CameraIcon } from './icons';
+import { ImageFile, AppMode } from '../types';
 import CameraCapture from './CameraCapture';
 
 interface InputBarProps {
-  onSendMessage: (text: string) => void;
+  onSendMessage: (inputText: string, imageFile: ImageFile | null) => void;
   isLoading: boolean;
-  imageFile: ImageFile | null;
-  imagePreview: string | null;
-  onFileSelect: (file: File) => void;
-  onImageRemove: () => void;
+  mode: AppMode;
+  focusRingColor: string;
+  sendButtonColor: string;
 }
 
-const InputBar: React.FC<InputBarProps> = ({ 
-  onSendMessage, 
-  isLoading, 
-  imageFile, 
-  imagePreview,
-  onFileSelect,
-  onImageRemove 
-}) => {
-  const [text, setText] = useState('');
+export interface InputBarRef {
+  triggerFileInput: () => void;
+}
+
+const placeholderMap: Record<AppMode, string> = {
+    identify: 'Upload a photo to identify a plant...',
+    diagnose: 'Describe symptoms or add a photo...',
+    care: 'Ask for care tips for your plant...',
+};
+
+const InputBar = forwardRef<InputBarRef, InputBarProps>(({ onSendMessage, isLoading, mode, focusRingColor, sendButtonColor }, ref) => {
+  const [inputText, setInputText] = useState('');
+  const [imageFile, setImageFile] = useState<ImageFile | null>(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      onFileSelect(file);
-    }
-  };
-
-  const handleCapture = (file: File) => {
-    onFileSelect(file);
-    setIsCameraOpen(false);
-  };
+  useImperativeHandle(ref, () => ({
+    triggerFileInput: () => {
+      fileInputRef.current?.click();
+    },
+  }));
 
   const handleSend = () => {
-    if (isLoading || (!text.trim() && !imageFile)) return;
-    const prompt = text.trim() || (imageFile ? "What plant is this and how do I care for it?" : "");
-    onSendMessage(prompt);
-    setText('');
-    // Image is cleared in the parent component's handleSendMessage
+    if (isLoading || (!inputText.trim() && !imageFile)) return;
+    onSendMessage(inputText, imageFile);
+    setInputText('');
+    setImageFile(null);
+    if (textAreaRef.current) {
+        textAreaRef.current.style.height = 'auto';
+    }
   };
-
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
-      event.preventDefault();
+  
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       handleSend();
     }
   };
 
-  const removeImage = () => {
-    onImageRemove();
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setImageFile({
+        file,
+        preview: URL.createObjectURL(file),
+      });
+      // Reset file input value to allow selecting the same file again
+      event.target.value = '';
     }
-  }
+  };
+
+  const handleCameraCapture = (file: File) => {
+    setImageFile({
+      file,
+      preview: URL.createObjectURL(file),
+    });
+    setIsCameraOpen(false);
+  };
+  
+  const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputText(e.target.value);
+    e.target.style.height = 'auto';
+    e.target.style.height = `${e.target.scrollHeight}px`;
+  };
 
   return (
     <>
-      {isCameraOpen && <CameraCapture onCapture={handleCapture} onClose={() => setIsCameraOpen(false)} />}
-      <div className="bg-white/80 backdrop-blur-sm border-t border-green-200/50 p-4">
-        <div className="max-w-4xl mx-auto">
-          {imagePreview && (
-            <div className="relative inline-block mb-2">
-              <img src={imagePreview} alt="Preview" className="h-20 w-20 object-cover rounded-lg" />
-              <button
-                onClick={removeImage}
-                className="absolute -top-2 -right-2 bg-gray-700 text-white rounded-full h-6 w-6 flex items-center justify-center text-xs font-bold hover:bg-red-500 transition-colors"
-                aria-label="Remove image"
-                title="Remove image"
-              >
-                &times;
-              </button>
-            </div>
-          )}
-          <div className="relative flex items-center bg-gray-100 border-2 border-transparent focus-within:border-green-500 transition-colors rounded-xl">
-            <textarea
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Ask about your plant..."
-              className="w-full bg-transparent p-3 pl-24 pr-20 resize-none border-none focus:ring-0 text-gray-800 placeholder-gray-500"
-              rows={1}
-              disabled={isLoading}
-            />
-            <div className="absolute left-3 flex items-center space-x-2">
-              <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="text-gray-500 hover:text-green-600 transition-colors disabled:opacity-50"
-                  disabled={isLoading}
-                  aria-label="Attach image from gallery"
-                  title="Attach image from gallery"
-              >
-                  <PaperclipIcon className="w-6 h-6" />
-              </button>
-              <button
-                  onClick={() => setIsCameraOpen(true)}
-                  className="text-gray-500 hover:text-green-600 transition-colors disabled:opacity-50"
-                  disabled={isLoading}
-                  aria-label="Use camera to take a photo"
-                  title="Use camera to take a photo"
-              >
-                  <CameraIcon className="w-6 h-6" />
-              </button>
-            </div>
-            <input
+      <div className="p-4 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+        {imageFile && (
+          <div className="relative w-24 h-24 mb-2">
+            <img src={imageFile.preview} alt="Preview" className="w-full h-full object-cover rounded-md" />
+            <button
+              onClick={() => setImageFile(null)}
+              className="absolute top-0 right-0 -mt-2 -mr-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs"
+              aria-label="Remove image"
+            >
+              &times;
+            </button>
+          </div>
+        )}
+        <div className="relative flex items-center">
+          <textarea
+            ref={textAreaRef}
+            value={inputText}
+            onChange={handleInput}
+            onKeyPress={handleKeyPress}
+            placeholder={placeholderMap[mode]}
+            className={`w-full p-3 pr-36 border rounded-lg focus:outline-none focus:ring-2 ${focusRingColor} dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 resize-none max-h-40`}
+            rows={1}
+            disabled={isLoading}
+          />
+          <div className="absolute right-2 flex items-center">
+             <input
               type="file"
               ref={fileInputRef}
               onChange={handleFileChange}
               className="hidden"
               accept="image/*"
             />
-            <button
-              onClick={handleSend}
-              disabled={isLoading || (!text.trim() && !imageFile)}
-              className="absolute right-3 bg-green-600 text-white rounded-lg p-2 hover:bg-green-700 transition-colors disabled:bg-green-300 disabled:cursor-not-allowed"
-              aria-label="Send message"
-              title="Send message"
-            >
-              <PaperPlaneIcon className="w-5 h-5" />
+            <button onClick={() => fileInputRef.current?.click()} className="p-2 text-gray-500 hover:text-blue-500 disabled:opacity-50" disabled={isLoading} aria-label="Attach file">
+              <PaperclipIcon className="w-6 h-6" />
+            </button>
+            <button onClick={() => setIsCameraOpen(true)} className="p-2 text-gray-500 hover:text-blue-500 disabled:opacity-50" disabled={isLoading} aria-label="Use camera">
+              <CameraIcon className="w-6 h-6" />
+            </button>
+            <button onClick={handleSend} className={`p-2 ${sendButtonColor} disabled:opacity-50`} disabled={isLoading || (!inputText.trim() && !imageFile)} aria-label="Send message">
+              <PaperPlaneIcon className="w-6 h-6" />
             </button>
           </div>
         </div>
       </div>
+      {isCameraOpen && <CameraCapture onCapture={handleCameraCapture} onClose={() => setIsCameraOpen(false)} />}
     </>
   );
-};
+});
 
 export default InputBar;
