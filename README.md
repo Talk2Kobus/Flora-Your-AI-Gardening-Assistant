@@ -6,11 +6,12 @@ Flora Navigator is a modern, AI-powered web application designed to help gardeni
 
 ## ✨ Features
 
--   **🎯 Three Specialized Modes**:
+-   **🎯 Four Specialized Modes**:
     -   **Identify**: Snap a photo to learn about any plant.
     -   **Diagnose**: Upload an image of a sick plant to get a diagnosis and treatment plan.
     -   **Care**: Ask for detailed care instructions for your plants.
--   **📷 Flexible Image Input**: Upload photos from your device or use the built-in camera for real-time identification.
+    -   **Flora Expert**: Engage in an open-ended conversation with your AI gardening expert about any topic.
+-   **📷 Flexible Image Input**: Upload photos from your device, use the built-in camera, or simply drag-and-drop an image onto the app.
 -   **💬 Interactive Chat**: Engage in a natural conversation with Flora, your AI gardening assistant.
 -   **🎨 Dynamic Theming**: The app's color scheme (headers, chat bubbles, UI accents) changes to match the active mode, creating a beautiful and intuitive experience.
 -   **🌙 Light & Dark Modes**: Switch between light and dark themes for comfortable viewing in any environment.
@@ -71,7 +72,6 @@ To run this project locally, follow these steps:
 │   ├── LandingPage.tsx        # The initial screen for mode selection
 │   ├── MarkdownRenderer.tsx   # Renders Markdown from the AI's response
 │   ├── NavigationBar.tsx      # Bottom navigation for switching modes
-│   ├── assets.ts              # Base64 encoded image assets
 │   ├── icons.tsx              # SVG icon components
 │   └── logo.ts                # Base64 encoded app logo
 ├── services/                  # Handles external API calls

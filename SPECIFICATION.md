@@ -2,7 +2,7 @@
 
 ## 1. Overview
 
-Flora Navigator is an AI-powered web application designed for gardening enthusiasts. It provides a mobile-first, conversational interface to help users identify plants, diagnose plant health problems, and get detailed care instructions. The application leverages Google's Gemini API for its powerful multimodal AI capabilities.
+Flora Navigator is an AI-powered web application designed for gardening enthusiasts. It provides a mobile-first, conversational interface to help users identify plants, diagnose plant health problems, get detailed care instructions, and have general-purpose conversations about gardening. The application leverages Google's Gemini API for its powerful multimodal AI capabilities.
 
 ## 2. Core Features
 
@@ -13,10 +13,10 @@ The application is designed with a clear, two-stage flow to enhance user experie
 -   **Purpose**: The initial screen that provides a clear, visually engaging entry point into the app's core functionalities.
 -   **Components**:
     -   Application logo and a "Hello, Gardener!" greeting.
-    -   A large, interactive "hero" card for "Identify Plant" featuring a background image.
-    -   Two smaller, distinctively colored cards for "Diagnose Problem" and "Care Guide".
+    -   A 2x2 grid of four interactive cards: "Identify Plant", "Diagnose Problem", "Care Guide", and "Flora Expert".
+    -   Each card is distinctively colored to match its corresponding mode theme.
 -   **Behavior**:
-    -   Tapping any of the three cards transitions the user to the Chat View, pre-set to the corresponding mode (`identify`, `diagnose`, or `care`).
+    -   Tapping any of the four cards transitions the user to the Chat View, pre-set to the corresponding mode (`identify`, `diagnose`, `care`, or `expert`).
     -   The user is not automatically prompted to upload a file, allowing them to start the conversation by typing if they prefer.
 
 #### 2.1.2. Chat View
@@ -34,6 +34,8 @@ The application is designed with a clear, two-stage flow to enhance user experie
     -   **Identify**: Switches to the plant identification mode.
     -   **Diagnose**: Switches to the problem diagnosis mode.
     -   **Care**: Switches to the care instructions mode.
+    -   **Expert**: Switches to the Flora Expert mode.
+    -   **Language**: Toggles between supported languages.
 -   **Behavior**:
     -   The icon for the currently active mode is highlighted with a background color that matches the mode's theme.
     -   Switching modes clears the current chat history to provide a clean context for the new conversation.
@@ -44,10 +46,11 @@ The AI, "Flora," adopts a different persona based on the selected mode to provid
 -   **Identify Mode**: Flora acts as a plant identification expert.
 -   **Diagnose Mode**: Flora acts as a plant pathologist.
 -   **Care Mode**: Flora acts as a master gardener.
+-   **Expert Mode**: Flora acts as a general, all-purpose gardening expert for open-ended conversation.
 
 ### 2.4. User Inputs
 -   **Text**: Users can type questions or descriptions in the input bar.
--   **Image**: Users can upload an image file or take a new photo with their device's camera.
+-   **Image**: Users can upload an image file, take a new photo with their device's camera, or drag-and-drop an image file onto the application window.
 
 ### 2.5. AI Responses
 -   **Text**: Responses are formatted using Markdown for better readability (headings, lists, bold text).
@@ -62,6 +65,6 @@ The AI, "Flora," adopts a different persona based on the selected mode to provid
 
 ## 4. Accessibility & Design
 -   **Responsive Design**: The interface is optimized for mobile devices but is functional on desktops.
--   **Dynamic Theming**: The app uses a dynamic color system. The UI for each mode (`identify`, `diagnose`, `care`) has a unique color palette (blue, teal, green respectively) applied to headers, buttons, and chat bubbles for strong visual cohesion.
+-   **Dynamic Theming**: The app uses a dynamic color system. The UI for each mode (`identify`, `diagnose`, `care`, `expert`) has a unique color palette (blue, teal, green, purple respectively) applied to headers, buttons, and chat bubbles for strong visual cohesion.
 -   **Dark Mode**: A theme toggle allows users to switch between light and dark modes for user comfort.
 -   **ARIA Attributes**: Buttons and inputs include appropriate ARIA labels for screen reader compatibility.

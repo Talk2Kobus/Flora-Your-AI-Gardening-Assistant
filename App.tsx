@@ -5,9 +5,10 @@ import InputBar, { InputBarRef } from './components/InputBar';
 import LandingPage from './components/LandingPage';
 import NavigationBar from './components/NavigationBar';
 import { generateContent } from './services/geminiService';
-import { Message, ImageFile, AppMode } from './types';
+import { Message, ImageFile, AppMode, Language } from './types';
 import { Content } from '@google/genai';
-import { SunIcon, MoonIcon } from './components/icons';
+import { SunIcon, MoonIcon, SparklesIcon } from './components/icons';
+import { translations } from './translations';
 
 const themeColors: Record<AppMode, { header: string; userMessage: string; focusRing: string; sendButton: string; }> = {
   identify: {
@@ -28,6 +29,12 @@ const themeColors: Record<AppMode, { header: string; userMessage: string; focusR
     focusRing: 'focus:ring-green-500',
     sendButton: 'text-green-500',
   },
+  expert: {
+    header: 'text-purple-600 dark:text-purple-400',
+    userMessage: 'bg-purple-500',
+    focusRing: 'focus:ring-purple-500',
+    sendButton: 'text-purple-500',
+  },
 };
 
 const App: React.FC = () => {
@@ -36,6 +43,8 @@ const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [language, setLanguage] = useState<Language>('en');
+  const [isDragging, setIsDragging] = useState(false);
   const inputBarRef = useRef<InputBarRef>(null);
 
   const toggleTheme = () => {
@@ -46,6 +55,10 @@ const App: React.FC = () => {
     } else {
       document.documentElement.classList.remove('dark');
     }
+  };
+
+  const toggleLanguage = () => {
+    setLanguage(prev => prev === 'en' ? 'af' : 'en');
   };
   
   const handleSelectMode = (selectedMode: AppMode) => {
@@ -63,6 +76,7 @@ const App: React.FC = () => {
         setMode(modeOrView);
         setMessages([]);
       }
+      setView('chat');
     }
   };
 
@@ -101,8 +115,8 @@ const App: React.FC = () => {
     }
 
     try {
-      // Pass the current mode to the service
-      const botResponseText = await generateContent(mode, history, inputText, imagePart);
+      // Pass the current mode and language to the service
+      const botResponseText = await generateContent(mode, language, history, inputText, imagePart);
       const botMessage: Message = {
         id: `bot-${Date.now()}`,
         text: botResponseText,
@@ -114,7 +128,7 @@ const App: React.FC = () => {
       console.error(error);
       const errorMessage: Message = {
         id: `bot-error-${Date.now()}`,
-        text: "Sorry, I'm having trouble connecting. Please try again later.",
+        text: translations[language].errorMessage,
         sender: 'bot',
         timestamp: new Date(),
       };
@@ -124,19 +138,55 @@ const App: React.FC = () => {
     }
   };
 
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      const imageFile: ImageFile = {
+        file,
+        preview: URL.createObjectURL(file),
+      };
+      handleSendMessage('', imageFile);
+    }
+  };
+
+
   if (view === 'landing') {
-    return <LandingPage onSelectMode={handleSelectMode} />;
+    return <LandingPage onSelectMode={handleSelectMode} language={language} />;
   }
   
   const currentTheme = themeColors[mode];
+  const headerTitle = translations[language][`mode${mode.charAt(0).toUpperCase() + mode.slice(1)}` as keyof typeof translations['en']];
 
   return (
-    <div className="flex flex-col h-screen max-w-4xl mx-auto bg-gray-50 dark:bg-gray-900">
+    <div 
+      className="flex flex-col h-screen max-w-4xl mx-auto bg-gray-50 dark:bg-gray-900 relative"
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
+      {isDragging && (
+        <div className="absolute inset-0 bg-blue-500 bg-opacity-50 flex flex-col items-center justify-center z-50 pointer-events-none border-4 border-dashed border-white rounded-lg">
+           <SparklesIcon className="w-16 h-16 text-white mb-4" />
+           <p className="text-white text-2xl font-bold">{translations[language].dropImageHere}</p>
+        </div>
+      )}
       <header className="flex items-center justify-between py-2 border-b-2 dark:border-gray-700 px-4 flex-shrink-0">
         <div className="flex items-center space-x-2">
           <img src={floraLogoDataUri} alt="Flora Logo" className="w-10 h-10" />
           <h1 className={`text-2xl font-bold capitalize ${currentTheme.header}`}>
-            {mode}
+            {headerTitle}
           </h1>
         </div>
         <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700" aria-label="Toggle theme">
@@ -154,13 +204,19 @@ const App: React.FC = () => {
             onSendMessage={handleSendMessage} 
             isLoading={isLoading} 
             mode={mode}
+            language={language}
             focusRingColor={currentTheme.focusRing}
             sendButtonColor={currentTheme.sendButton}
         />
       </div>
 
       <div className="flex-shrink-0">
-        <NavigationBar activeMode={mode} onNavigate={handleNavigate} />
+        <NavigationBar 
+          activeMode={mode} 
+          onNavigate={handleNavigate} 
+          language={language} 
+          onToggleLanguage={toggleLanguage} 
+        />
       </div>
     </div>
   );

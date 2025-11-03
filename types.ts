@@ -14,4 +14,7 @@ export interface ImageFile {
 }
 
 // Defines the application modes for different tasks.
-export type AppMode = 'identify' | 'diagnose' | 'care';
+export type AppMode = 'identify' | 'diagnose' | 'care' | 'expert';
+
+// Defines the supported languages.
+export type Language = 'en' | 'af';

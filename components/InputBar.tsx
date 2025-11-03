@@ -1,12 +1,14 @@
 import React, { useState, useRef, useImperativeHandle, forwardRef } from 'react';
 import { PaperPlaneIcon, PaperclipIcon, CameraIcon } from './icons';
-import { ImageFile, AppMode } from '../types';
+import { ImageFile, AppMode, Language } from '../types';
 import CameraCapture from './CameraCapture';
+import { translations } from '../translations';
 
 interface InputBarProps {
   onSendMessage: (inputText: string, imageFile: ImageFile | null) => void;
   isLoading: boolean;
   mode: AppMode;
+  language: Language;
   focusRingColor: string;
   sendButtonColor: string;
 }
@@ -15,13 +17,7 @@ export interface InputBarRef {
   triggerFileInput: () => void;
 }
 
-const placeholderMap: Record<AppMode, string> = {
-    identify: 'Upload a photo to identify a plant...',
-    diagnose: 'Describe symptoms or add a photo...',
-    care: 'Ask for care tips for your plant...',
-};
-
-const InputBar = forwardRef<InputBarRef, InputBarProps>(({ onSendMessage, isLoading, mode, focusRingColor, sendButtonColor }, ref) => {
+const InputBar = forwardRef<InputBarRef, InputBarProps>(({ onSendMessage, isLoading, mode, language, focusRingColor, sendButtonColor }, ref) => {
   const [inputText, setInputText] = useState('');
   const [imageFile, setImageFile] = useState<ImageFile | null>(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
@@ -76,6 +72,8 @@ const InputBar = forwardRef<InputBarRef, InputBarProps>(({ onSendMessage, isLoad
     e.target.style.height = 'auto';
     e.target.style.height = `${e.target.scrollHeight}px`;
   };
+  
+  const placeholder = translations[language][`inputPlaceholder${mode.charAt(0).toUpperCase() + mode.slice(1)}` as keyof typeof translations['en']];
 
   return (
     <>
@@ -98,7 +96,7 @@ const InputBar = forwardRef<InputBarRef, InputBarProps>(({ onSendMessage, isLoad
             value={inputText}
             onChange={handleInput}
             onKeyPress={handleKeyPress}
-            placeholder={placeholderMap[mode]}
+            placeholder={placeholder}
             className={`w-full p-3 pr-36 border rounded-lg focus:outline-none focus:ring-2 ${focusRingColor} dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 resize-none max-h-40`}
             rows={1}
             disabled={isLoading}
