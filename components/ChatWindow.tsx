@@ -28,7 +28,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isLoading, userMessag
           <div className={`max-w-xl p-3 rounded-lg shadow-sm ${
             message.sender === 'user' 
               ? `${userMessageColor} text-white` 
-              : 'bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200'
+              : 'bg-gray-200 text-gray-800'
           }`}>
             {message.image && (
                 <img src={message.image} alt="user upload" className="rounded-md mb-2 max-w-xs" />
@@ -43,7 +43,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ messages, isLoading, userMessag
       {isLoading && (
         <div className="flex items-start gap-4">
           <img src={floraLogoDataUri} alt="Bot Avatar" className="w-8 h-8 rounded-full flex-shrink-0" />
-          <div className="bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200 max-w-xl p-3 rounded-lg flex items-center space-x-2 shadow-sm">
+          <div className="bg-gray-200 text-gray-800 max-w-xl p-3 rounded-lg flex items-center space-x-2 shadow-sm">
              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse delay-150"></div>
              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse delay-300"></div>

@@ -18,40 +18,40 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSelectMode, language }) => 
       title: t.identifyPlant,
       description: t.identifyDescription,
       icon: <CameraIcon className="w-8 h-8" />,
-      colorClasses: 'bg-blue-100 dark:bg-blue-900/60 text-blue-800 dark:text-blue-200',
+      colorClasses: 'bg-blue-100 text-blue-800',
     },
     {
       mode: 'diagnose' as AppMode,
       title: t.diagnoseProblem,
       description: t.diagnoseDescription,
       icon: <HeartPulseIcon className="w-8 h-8" />,
-      colorClasses: 'bg-teal-100 dark:bg-teal-900/60 text-teal-800 dark:text-teal-200',
+      colorClasses: 'bg-teal-100 text-teal-800',
     },
     {
       mode: 'care' as AppMode,
       title: t.careGuide,
       description: t.careDescription,
       icon: <BookOpenIcon className="w-8 h-8" />,
-      colorClasses: 'bg-green-100 dark:bg-green-900/60 text-green-800 dark:text-green-200',
+      colorClasses: 'bg-green-100 text-green-800',
     },
     {
       mode: 'expert' as AppMode,
       title: t.expertTitle,
       description: t.expertDescription,
       icon: <SparklesIcon className="w-8 h-8" />,
-      colorClasses: 'bg-purple-100 dark:bg-purple-900/60 text-purple-800 dark:text-purple-200',
+      colorClasses: 'bg-purple-100 text-purple-800',
     },
   ];
 
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100 p-6 flex flex-col font-sans">
+    <div className="min-h-screen bg-gray-50 text-gray-800 p-6 flex flex-col font-sans">
       
       <header className="flex items-center gap-4 mb-8 pt-4">
         <img src={floraLogoDataUri} alt="Flora Navigator Logo" className="w-12 h-12" />
         <div>
           <h1 className="text-3xl font-bold tracking-tight">{t.helloGardener}</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">{t.whatToDo}</p>
+          <p className="text-gray-500 mt-1">{t.whatToDo}</p>
         </div>
       </header>
 

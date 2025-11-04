@@ -4,33 +4,33 @@ import ChatWindow from './components/ChatWindow';
 import InputBar, { InputBarRef } from './components/InputBar';
 import LandingPage from './components/LandingPage';
 import NavigationBar from './components/NavigationBar';
-import { generateContent } from './services/geminiService';
+import { generateContent, translateText } from './services/geminiService';
 import { Message, ImageFile, AppMode, Language } from './types';
 import { Content } from '@google/genai';
-import { SunIcon, MoonIcon, SparklesIcon } from './components/icons';
+import { SparklesIcon } from './components/icons';
 import { translations } from './translations';
 
 const themeColors: Record<AppMode, { header: string; userMessage: string; focusRing: string; sendButton: string; }> = {
   identify: {
-    header: 'text-blue-600 dark:text-blue-400',
+    header: 'text-blue-600',
     userMessage: 'bg-blue-500',
     focusRing: 'focus:ring-blue-500',
     sendButton: 'text-blue-500',
   },
   diagnose: {
-    header: 'text-teal-600 dark:text-teal-400',
+    header: 'text-teal-600',
     userMessage: 'bg-teal-500',
     focusRing: 'focus:ring-teal-500',
     sendButton: 'text-teal-500',
   },
   care: {
-    header: 'text-green-600 dark:text-green-400',
+    header: 'text-green-600',
     userMessage: 'bg-green-500',
     focusRing: 'focus:ring-green-500',
     sendButton: 'text-green-500',
   },
   expert: {
-    header: 'text-purple-600 dark:text-purple-400',
+    header: 'text-purple-600',
     userMessage: 'bg-purple-500',
     focusRing: 'focus:ring-purple-500',
     sendButton: 'text-purple-500',
@@ -42,23 +42,43 @@ const App: React.FC = () => {
   const [mode, setMode] = useState<AppMode>('identify');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [language, setLanguage] = useState<Language>('en');
   const [isDragging, setIsDragging] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
   const inputBarRef = useRef<InputBarRef>(null);
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    if (newTheme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  };
+  const toggleLanguage = async () => {
+    if (isTranslating) return;
 
-  const toggleLanguage = () => {
-    setLanguage(prev => prev === 'en' ? 'af' : 'en');
+    const newLanguage = language === 'en' ? 'af' : 'en';
+
+    if (messages.length === 0) {
+        setLanguage(newLanguage);
+        return;
+    }
+
+    setIsTranslating(true);
+    try {
+        const translatedMessages = await Promise.all(
+            messages.map(async (msg) => {
+                // Only translate bot messages
+                if (msg.sender === 'bot') {
+                    const translatedText = await translateText(msg.text, newLanguage);
+                    return { ...msg, text: translatedText };
+                }
+                // Return user messages as is
+                return msg;
+            })
+        );
+        
+        setMessages(translatedMessages);
+        setLanguage(newLanguage);
+    } catch (error) {
+        console.error("Failed to translate chat history:", error);
+        setLanguage(newLanguage); // Still switch language even if translation fails.
+    } finally {
+        setIsTranslating(false);
+    }
   };
   
   const handleSelectMode = (selectedMode: AppMode) => {
@@ -115,7 +135,6 @@ const App: React.FC = () => {
     }
 
     try {
-      // Pass the current mode and language to the service
       const botResponseText = await generateContent(mode, language, history, inputText, imagePart);
       const botMessage: Message = {
         id: `bot-${Date.now()}`,
@@ -171,7 +190,7 @@ const App: React.FC = () => {
 
   return (
     <div 
-      className="flex flex-col h-screen max-w-4xl mx-auto bg-gray-50 dark:bg-gray-900 relative"
+      className="flex flex-col h-screen max-w-4xl mx-auto bg-gray-50 relative"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
@@ -182,16 +201,13 @@ const App: React.FC = () => {
            <p className="text-white text-2xl font-bold">{translations[language].dropImageHere}</p>
         </div>
       )}
-      <header className="flex items-center justify-between py-2 border-b-2 dark:border-gray-700 px-4 flex-shrink-0">
+      <header className="flex items-center justify-between py-2 border-b-2 border-gray-200 px-4 flex-shrink-0">
         <div className="flex items-center space-x-2">
           <img src={floraLogoDataUri} alt="Flora Logo" className="w-10 h-10" />
           <h1 className={`text-2xl font-bold capitalize ${currentTheme.header}`}>
             {headerTitle}
           </h1>
         </div>
-        <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700" aria-label="Toggle theme">
-          {theme === 'light' ? <MoonIcon className="w-6 h-6 text-gray-700" /> : <SunIcon className="w-6 h-6 text-yellow-400" />}
-        </button>
       </header>
       
       <main className="flex-1 overflow-y-auto pb-4">
@@ -216,6 +232,7 @@ const App: React.FC = () => {
           onNavigate={handleNavigate} 
           language={language} 
           onToggleLanguage={toggleLanguage} 
+          isTranslating={isTranslating}
         />
       </div>
     </div>

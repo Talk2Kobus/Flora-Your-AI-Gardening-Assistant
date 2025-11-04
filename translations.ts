@@ -27,6 +27,7 @@ export const translations = {
     geminiError: "Sorry, I encountered an error while processing your request. Please try again.",
     emptyInputError: "Please provide a question or an image.",
     dropImageHere: "Drop image here to start chat",
+    translating: "Translating...",
   },
   af: {
     helloGardener: "Hallo, Tuinier!",
@@ -56,5 +57,6 @@ export const translations = {
     geminiError: "Jammer, 'n fout het voorgekom tydens die verwerking van jou versoek. Probeer asseblief weer.",
     emptyInputError: "Verskaf asseblief 'n vraag of 'n prent.",
     dropImageHere: "Laat val prent hier om te begin",
+    translating: "Vertaal...",
   }
 };

@@ -8,16 +8,17 @@ interface NavigationBarProps {
   onNavigate: (modeOrView: AppMode | 'landing') => void;
   language: Language;
   onToggleLanguage: () => void;
+  isTranslating?: boolean;
 }
 
 const activeColorMap: Record<AppMode, string> = {
-    identify: 'bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300',
-    diagnose: 'bg-teal-100 dark:bg-teal-900 text-teal-600 dark:text-teal-300',
-    care: 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-300',
-    expert: 'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300',
+    identify: 'bg-blue-100 text-blue-600',
+    diagnose: 'bg-teal-100 text-teal-600',
+    care: 'bg-green-100 text-green-600',
+    expert: 'bg-purple-100 text-purple-600',
 };
 
-const NavigationBar: React.FC<NavigationBarProps> = ({ activeMode, onNavigate, language, onToggleLanguage }) => {
+const NavigationBar: React.FC<NavigationBarProps> = ({ activeMode, onNavigate, language, onToggleLanguage, isTranslating }) => {
   const t = translations[language];
   const navItems = [
     { mode: 'landing', label: t.navHome, icon: HomeIcon },
@@ -28,12 +29,12 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ activeMode, onNavigate, l
   ];
 
   return (
-    <div className="grid grid-cols-6 gap-2 p-2 bg-white dark:bg-gray-800 border-t dark:border-gray-700">
+    <div className="grid grid-cols-6 gap-2 p-2 bg-white border-t border-gray-200">
       {navItems.map((item) => {
         const isActive = activeMode === item.mode;
         const activeClasses = isActive && item.mode !== 'landing' 
             ? activeColorMap[item.mode as AppMode] 
-            : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700';
+            : 'text-gray-600 hover:bg-gray-100';
 
         return (
           <button
@@ -50,11 +51,23 @@ const NavigationBar: React.FC<NavigationBarProps> = ({ activeMode, onNavigate, l
        <button
         key="language"
         onClick={onToggleLanguage}
-        className="flex flex-col items-center justify-center p-2 rounded-lg transition-colors text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
+        disabled={isTranslating}
+        className="flex flex-col items-center justify-center p-2 rounded-lg transition-colors text-gray-600 hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
         aria-label="Toggle language"
       >
-        <GlobeIcon className="w-6 h-6 mb-1" />
-        <span className="text-xs font-medium">{language.toUpperCase()}</span>
+        {isTranslating ? (
+          <>
+            <div className="w-6 h-6 mb-1 flex items-center justify-center">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-current"></div>
+            </div>
+            <span className="text-xs font-medium">{t.translating}</span>
+          </>
+        ) : (
+          <>
+            <GlobeIcon className="w-6 h-6 mb-1" />
+            <span className="text-xs font-medium">{language.toUpperCase()}</span>
+          </>
+        )}
       </button>
     </div>
   );

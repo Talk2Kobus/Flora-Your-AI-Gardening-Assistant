@@ -77,7 +77,7 @@ const InputBar = forwardRef<InputBarRef, InputBarProps>(({ onSendMessage, isLoad
 
   return (
     <>
-      <div className="p-4 border-t dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+      <div className="p-4 border-t bg-gray-50">
         {imageFile && (
           <div className="relative w-24 h-24 mb-2">
             <img src={imageFile.preview} alt="Preview" className="w-full h-full object-cover rounded-md" />
@@ -97,7 +97,7 @@ const InputBar = forwardRef<InputBarRef, InputBarProps>(({ onSendMessage, isLoad
             onChange={handleInput}
             onKeyPress={handleKeyPress}
             placeholder={placeholder}
-            className={`w-full p-3 pr-36 border rounded-lg focus:outline-none focus:ring-2 ${focusRingColor} dark:bg-gray-700 dark:text-gray-200 dark:border-gray-600 resize-none max-h-40`}
+            className={`w-full p-3 pr-36 border rounded-lg focus:outline-none focus:ring-2 ${focusRingColor} resize-none max-h-40`}
             rows={1}
             disabled={isLoading}
           />
